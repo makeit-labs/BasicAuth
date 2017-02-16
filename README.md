@@ -18,13 +18,25 @@ This is a Swift Package manager module. Install it by including it in your
 ## Usage
 
 ```swift
+import Foundation
+import Kitura
 import BasicAuth
 
-router.get("/") { request, response, next in
-    let user = basicAuth(request)!
-    response.send("Hello, \(user.name)! Your password is \(user.password)!!")
+let router = Router()
+let users = ["john" : "1234", "mary" : "1234"]
+
+let basicAuthMiddleware = RouterMiddlewareGenerator { request, response, next in
+    guard let user = basicAuth(request),
+        let storedPassword = users[user.name],
+        (storedPassword == user.password) else {
+        response.headers.append("WWW-Authenticate", value: "Basic realm=\"User\"")
+        try response.send(status: .unauthorized).end()
+        return
+    }
     next()
 }
+
+router.all("/", middleware: basicAuthMiddleware)
 ```
 
 ### `UserCredentials`

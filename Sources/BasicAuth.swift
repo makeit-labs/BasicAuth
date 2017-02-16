@@ -2,8 +2,8 @@ import Foundation
 import Kitura
 
 public struct UserCredentials {
-    var name: String
-    var password: String
+    public var name: String
+    public var password: String
 }
 
 public func basicAuth(_ request: RouterRequestProtocol) -> UserCredentials? {

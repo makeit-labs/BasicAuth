@@ -6,6 +6,4 @@ public protocol RouterRequestProtocol {
     var urlURL: URL { get }
 }
 
-extension RouterRequest: RouterRequestProtocol {
-
-}
+extension RouterRequest: RouterRequestProtocol { }

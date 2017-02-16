@@ -44,4 +44,61 @@ class BasicAuthKituraTests: XCTestCase {
         XCTAssertEqual(basicAuth(request)?.name, "mary")
         XCTAssertEqual(basicAuth(request)?.password, "marypass")
     }
+
+    func testNoHeadersNoURLCredentials() {
+        let headers = Headers(headers: HeadersContainer())
+        let urlURL = URL(string: "http://example.com/")!
+        let request = RouterRequestStub(headers: headers, urlURL: urlURL)
+
+        XCTAssertNil(basicAuth(request))
+    }
+
+    func testURLNoPassword() {
+        let headers = Headers(headers: HeadersContainer())
+        let urlURL = URL(string: "http://john@example.com/")!
+        let request = RouterRequestStub(headers: headers, urlURL: urlURL)
+
+        XCTAssertNil(basicAuth(request))
+    }
+
+    func testHeaderNoAuthorization() {
+        let headerContainer = HeadersContainer()
+        headerContainer.append("Blah", value: "blahblah")
+        let headers = Headers(headers: headerContainer)
+        let urlURL = URL(string: "http://example.com/")!
+        let request = RouterRequestStub(headers: headers, urlURL: urlURL)
+
+        XCTAssertNil(basicAuth(request))
+    }
+
+    func testHeaderNotEnoughComponents() {
+        let headerContainer = HeadersContainer()
+        headerContainer.append("Authorization", value: "Invalid")
+        let headers = Headers(headers: headerContainer)
+        let urlURL = URL(string: "http://example.com/")!
+        let request = RouterRequestStub(headers: headers, urlURL: urlURL)
+
+        XCTAssertNil(basicAuth(request))
+    }
+
+    func testHeaderNotBasic() {
+        let encodedCredentials = "mary:marypass".base64Encoded()!
+        let headerContainer = HeadersContainer()
+        headerContainer.append("Authorization", value: "NotBasic \(encodedCredentials)")
+        let headers = Headers(headers: headerContainer)
+        let urlURL = URL(string: "http://example.com/")!
+        let request = RouterRequestStub(headers: headers, urlURL: urlURL)
+
+        XCTAssertNil(basicAuth(request))
+    }
+
+    func testHeaderNotEncodedCorrectly() {
+        let headerContainer = HeadersContainer()
+        headerContainer.append("Authorization", value: "NotBasic mary:marypass")
+        let headers = Headers(headers: headerContainer)
+        let urlURL = URL(string: "http://example.com/")!
+        let request = RouterRequestStub(headers: headers, urlURL: urlURL)
+
+        XCTAssertNil(basicAuth(request))
+    }
 }

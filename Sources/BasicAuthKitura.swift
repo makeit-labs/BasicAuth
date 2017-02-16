@@ -1,12 +1,12 @@
 import Foundation
 import Kitura
 
-public struct User {
+public struct UserCredentials {
     var name: String
     var password: String
 }
 
-public func basicAuth(_ request: RouterRequestProtocol) -> User? {
+public func basicAuth(_ request: RouterRequestProtocol) -> UserCredentials? {
     var authorization : String
     if let user = request.urlURL.user, let password = request.urlURL.password {
         authorization = "\(user):\(password)"
@@ -33,7 +33,5 @@ public func basicAuth(_ request: RouterRequestProtocol) -> User? {
         return nil
     }
 
-    let userid = credentials[0]
-    let password = credentials[1]
-    return User(name: userid, password: password)
+    return UserCredentials(name: credentials[0], password: credentials[1])
 }

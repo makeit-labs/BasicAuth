@@ -2,7 +2,7 @@ import XCTest
 
 @testable import Kitura
 @testable import KituraNet
-@testable import BasicAuthKitura
+@testable import BasicAuth
 
 extension String {
     func base64Encoded() -> String? {
@@ -23,7 +23,20 @@ class RouterRequestStub: RouterRequestProtocol {
     }
 }
 
-class BasicAuthKituraTests: XCTestCase {
+class BasicAuthTests: XCTestCase {
+    static var allTests: [(String, (BasicAuthTests) -> () throws -> Void)] {
+        return [
+            ("testBasicAuthURL", testBasicAuthURL),
+            ("testBasicAuthHeaders", testBasicAuthHeaders),
+            ("testNoHeadersNoURLCredentials", testNoHeadersNoURLCredentials),
+            ("testURLNoPassword", testURLNoPassword),
+            ("testHeaderNoAuthorization", testHeaderNoAuthorization),
+            ("testHeaderNotEnoughComponents", testHeaderNotEnoughComponents),
+            ("testHeaderNotBasic", testHeaderNotBasic),
+            ("testHeaderNotEncodedCorrectly", testHeaderNotEncodedCorrectly)
+        ]
+    }
+
     func testBasicAuthURL() {
         let headers = Headers(headers: HeadersContainer())
         let urlURL = URL(string: "http://john:johnpass@example.com/")!

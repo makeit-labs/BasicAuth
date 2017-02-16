@@ -1,8 +1,24 @@
-# BasicAuth
+# BasicAuth 🔑🗝🔎
 
-Generic basic auth Authorization header field parser for Kitura (Swift 3).
+Generic basic auth Authorization header field parser for [Kitura](http://www.kitura.io/) (Swift 3).
 
-Inspired by the [Node.js](https://nodejs.org/en/) library [basic-auth](https://github.com/jshttp/basic-auth)
+(Not associated with or endorsed by the Kitura team.)
+
+## Motivation
+Kitura is a fast, lightweight web server framework for Swift 3.
+
+While [Kitura-CredentialsHTTP](https://github.com/IBM-Swift/Kitura-CredentialsHTTP)
+provides a complete authentication framework that is pluggable,
+there are times when reading the auth header directly is useful.
+
+You might want to parse the Basic Auth headers yourself in a custom
+middleware, for example.
+
+BasicAuth simply extracts the Authorization parser from Kitura-CredentialsHTTP
+and packages it into a single easy-to-use function that optionally returns
+the user's credentials.
+
+Inspired by the [Node.js](https://nodejs.org/en/) library [basic-auth](https://github.com/jshttp/basic-auth).
 
 ## Installation
 
@@ -45,8 +61,8 @@ Just a plain old Swift struct that holds the credentials.
 
 ```swift
 public struct UserCredentials {
-    var name: String
-    var password: String
+    public var name: String
+    public var password: String
 }
 ```
 
